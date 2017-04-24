@@ -1,0 +1,47 @@
+{% extends 'stream.html' %}
+
+{% block content %}
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+<div>
+<h3>My Advisors</h3></div>
+<table>
+  <tr>
+    <th>Writer</th>
+    <th>Date</th>
+    <th>Ticker</th>
+    <th>Side</th>
+    <th>Price Return</th>
+    <th>Entry Price</th>
+    <th>Current Price</th>
+  </tr>
+  <tr>
+{% for post in stream %}
+<td><a href="{{url_for('stream',userid=post.writer.id)}}">{{post.writer.name}}</a></td>
+<td>{{ post.timestamp.strftime('%b %d, %Y')}}</td>
+<td><a href="{{ url_for('ticker',symbol=post.symbol)}}">{{post.exchange}}:{{post.symbol}}</a></td>
+<td>{% if post.side %}<span class="label label-success">Buy</span>{% else %}<span class="label label-danger">Sell{% endif %}</span></td>
+<td>{{ "{:.2}%".format(px_return(post.side,post.entry_px,price(post.exchange,post.symbol))*100)}}</td>
+<td>{{ "{0:.2f}".format(post.entry_px)}}</td>
+<td>{{ price(post.exchange,post.symbol)}}</td>
+</tr>
+{% endfor %}
+</table>
+
+{{ super() }}
+{% endblock %}

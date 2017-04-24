@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<style>div{margin-left: 20px;font-family: raleway;}
+img.resize{max-width: 25%;max-height: 25%}
+</style><div>
+</br>
+<div>
+<h2>Recent Stories</h2>
+  <div>
+
+{% for post in stream %}
+  <div>
+<!-- NEED TO LINK POST TO ARTICLE -->
+<div padding:30px><a href={{post.link}}>
+  <div><h3><img width="30" height="30" src="/static/img/553-motley-fool.png" alt='fool'>  <a href={{url_for('stream',userid=post.writer.id)}}>{{ post.writer.name }}</a> {% if post.side %}
+    <span class="label label-success">Buy</span>{% else %}<span class="label label-danger">Sell</span>{% endif %}
+  <a href="{{ url_for('ticker',symbol=post.symbol)}}">{{post.exchange}}:{{post.symbol}}</a></h3></div>
+      <!-- <i class='clock'</i><time data-time="{{ post.timestamp }}" class='distime' datetime="{{post.timestamp.strftime('%Y-%m-%d %H:%M:%S')}}"> {{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</time> -->
+      </div>
+<a href="{{post.link}}">{{post.title}}</a> | {{post.writer.company}}
+        <div>
+          <p>
+            {{ post.symbol }}
+            {% if px_return(post.side,post.entry_px,price(post.exchange,post.symbol)) >= 0 %}
+            <span class="label label-success">{{ "{:.2}%".format(px_return(post.side,post.entry_px,price(post.exchange,post.symbol))*100) }}</span>
+            {% else %}
+            <span class="label label-danger">{{ "{:.2}%".format(px_return(post.side,post.entry_px,price(post.exchange,post.symbol))*100) }}</span>
+            {% endif %}
+          </p>
+    </div>
+    <hr>
+  </div>
+{% endfor %}
+{% endblock %}

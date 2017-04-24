@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}TruePicks{% endblock %}</title>
+        <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/bootstrap.css">
+        <!--[if lt IE 9]>
+            <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+            <script>window.html5 || document.write('<script src="/static/js/vendor/html5shiv.js"><\/script>')</script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <header>
+          <nav class="navbar navbar-default">
+            <div class="container-fluid">
+              <!-- Brand and toggle get grouped for better mobile display -->
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url_for('index') }}">TruePicks</a>
+              </div>
+
+              <!-- Collect the nav links, forms, and other content for toggling -->
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+              <!-- Be able to follow advisors and only stream picks the advisors make. Screen should layout the Name of Advisor, Company, and accuracy score -->
+              {% if current_user.is_authenticated %}
+                  <li class="active"><a href="{{url_for('myadvisors',viewid=current_user.id)}}">My Advisors<span class="sr-only">(current)</span></a></li>
+                {% else %}
+                  <li class="active"><a href="{{ url_for('login')}}">My Advisors<span class="sr-only">(current)</span></a></li>
+                  {% endif %}
+                  <!-- Collect all of the accuracy scores for all of the advisors and display the top advisors based on score and number of picks. Include button to easily follow -->
+                  <li><a href="{{ url_for('index')}}">New Stories</a></li>
+                  <li class="dropdown">
+                    <a href="{{url_for('index')}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Advisors <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                      <!-- Bring user to form that allows them to enter writer into prospective writer database -->
+                      <li><a href="#">Add Writer</a></li>
+                      <li><a href="{{url_for('post')}}">Gather Posts</a></li>
+                      <li><a href="#">Something else here</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="#">Separated link</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="#">One more separated link</a></li>
+                    </ul>
+                  </li>
+                </ul>
+                <form class="navbar-form navbar-left">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search by Author">
+                  </div>
+                  <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+                {% if current_user.is_authenticated %}
+                <ul class="nav navbar-nav navbar-right">
+                  <!-- Include delete account, FAQs, and account information -->
+                  <li><a href="{{url_for('add_form')}}">Add Writer</a></li>
+                  <li><a href="{{ url_for('logout')}}"><span class="glyphicon glyphicon-off">  Logout</span></a></li>
+                  {% else %}
+                      <ul class="nav navbar-nav navbar-right">
+                        <!-- Need to center this on to screen! Also may like to make flashier notification for "Log in" -->
+                    <li><a href="{{ url_for('login')}}">Login</a></li>
+                    <li><a href="{{ url_for('register')}}">Register</a></li>
+                  {% endif %}
+                </ul>
+              </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+          </nav>
+        </header>
+
+        <!-- Flash messages -->
+        <div>
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+          {% for category, message in messages %}
+                    <div class='notification {{ category }}'> {{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+</div>
+
+        <div class="row">
+
+          <div class="main">
+
+            {% block content %}{% endblock %}
+
+          </div>
+
+        </div>
+
+        <footer>
+
+        </footer>
+
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/bootstrap.js"></script>
+
+    </body>
+</html>
